@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>宇鯨智能 | 企業 AI 人才戰力評估表 (2026 終極版)</title>
+    <title>宇鯨智能 | 企業 AI 人才戰力評估表 (2026 版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        
+        /* 列印樣式優化 */
         @media print {
             .no-print { display: none !important; }
             body { background-color: white; padding: 0; }
             .print-container { box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; }
-            input, select { border: none !important; appearance: none; background: transparent !important; font-weight: bold; }
+            input, select { border: none !important; appearance: none; -webkit-appearance: none; background: transparent !important; font-weight: bold; }
         }
+
         .pyramid-bg { background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%); }
         .input-focus:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        .cta-box { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); }
     </style>
 </head>
 <body class="py-8 px-4">
@@ -33,14 +37,6 @@
                     <p class="text-xs uppercase tracking-widest text-blue-200">宇鯨智能顧問團隊</p>
                 </div>
             </div>
-            <div class="mt-6 flex gap-4 no-print">
-                <button onclick="window.print()" class="bg-white text-blue-700 px-6 py-2 rounded-full font-bold shadow-lg hover:bg-blue-50 transition-all flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                    列印診斷 PDF
-                </button>
-            </div>
         </header>
 
         <div class="p-8 space-y-10">
@@ -53,22 +49,27 @@
                     <div class="border-t-4 border-blue-800 p-4 bg-gray-50 rounded-b-lg">
                         <label class="block text-sm font-bold text-blue-900 mb-1">L5 流程實踐師</label>
                         <input type="number" id="count-l5" onchange="calculateResults()" placeholder="人數" class="w-full p-2 border border-gray-300 rounded input-focus">
+                        <p class="text-[10px] text-gray-500 mt-2">No-code/自動化串接</p>
                     </div>
                     <div class="border-t-4 border-blue-600 p-4 bg-gray-50 rounded-b-lg">
                         <label class="block text-sm font-bold text-blue-700 mb-1">L4 工作流設計師</label>
                         <input type="number" id="count-l4" onchange="calculateResults()" placeholder="人數" class="w-full p-2 border border-gray-300 rounded input-focus">
+                        <p class="text-[10px] text-gray-500 mt-2">任務拆解與人機協作</p>
                     </div>
                     <div class="border-t-4 border-blue-400 p-4 bg-gray-50 rounded-b-lg">
                         <label class="block text-sm font-bold text-blue-500 mb-1">L3 知識規劃師</label>
                         <input type="number" id="count-l3" onchange="calculateResults()" placeholder="人數" class="w-full p-2 border border-gray-300 rounded input-focus">
+                        <p class="text-[10px] text-gray-500 mt-2">RAG 規劃與知識工程</p>
                     </div>
                     <div class="border-t-4 border-gray-400 p-4 bg-gray-50 rounded-b-lg">
                         <label class="block text-sm font-bold text-gray-600 mb-1">L2 精準調校師</label>
                         <input type="number" id="count-l2" onchange="calculateResults()" placeholder="人數" class="w-full p-2 border border-gray-300 rounded input-focus">
+                        <p class="text-[10px] text-gray-500 mt-2">專業驗證與結果負責</p>
                     </div>
                     <div class="border-t-4 border-gray-200 p-4 bg-gray-50 rounded-b-lg">
                         <label class="block text-sm font-bold text-gray-400 mb-1">L1 效率使用者</label>
                         <input type="number" id="count-l1" onchange="calculateResults()" placeholder="人數" class="w-full p-2 border border-gray-300 rounded input-focus">
+                        <p class="text-[10px] text-gray-500 mt-2">基礎對話與行政輔助</p>
                     </div>
                 </div>
             </section>
@@ -82,38 +83,76 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all">
                         <div class="flex-1">
                             <h3 class="font-bold text-gray-700">數據資產化程度 (L3 關聯)</h3>
+                            <p class="text-sm text-gray-500">公司經驗是否已結構化供 AI 讀取？</p>
                         </div>
                         <select id="score-data" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-32">
-                            <option value="1">1 (全紙本)</option><option value="3">3 (個人數位)</option><option value="5">5 (系統化)</option>
+                            <option value="1">1 (全紙本)</option><option value="3">3 (個人數位)</option><option value="5">5 (系統化 RAG)</option>
                         </select>
                     </div>
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all">
                         <div class="flex-1">
                             <h3 class="font-bold text-gray-700">流程自動化程度 (L4/L5 關聯)</h3>
+                            <p class="text-sm text-gray-500">是否有 AI 代理人執行端到端工作？</p>
                         </div>
                         <select id="score-flow" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-32">
-                            <option value="1">1 (全人工)</option><option value="3">3 (數位化)</option><option value="5">5 (跨部自動化)</option>
+                            <option value="1">1 (全人工)</option><option value="3">3 (數位流程)</option><option value="5">5 (完全自動化)</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-gray-700">AI-First 意識底座</h3>
+                            <p class="text-sm text-gray-500">遇新任務時，是否反射性思考 AI 協作？</p>
+                        </div>
+                        <select id="score-mindset" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-32">
+                            <option value="1">1 (抗拒/遺忘)</option><option value="3">3 (偶爾嘗試)</option><option value="5">5 (反射性協作)</option>
                         </select>
                     </div>
                 </div>
             </section>
 
-            <section>
+            <section class="page-break">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</span>
                     <h2 class="text-xl font-bold text-gray-800">宇鯨智能 — 專家診斷報告</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="p-6 bg-blue-50 rounded-2xl border-2 border-blue-100">
-                        <h3 class="text-blue-800 font-bold mb-3">潛在風險診斷</h3>
+                        <h3 class="text-blue-800 font-bold mb-3 flex items-center gap-2">潛在風險診斷</h3>
                         <div id="risk-text" class="text-sm text-blue-900 leading-relaxed space-y-2"></div>
                     </div>
                     <div class="p-6 bg-green-50 rounded-2xl border-2 border-green-100">
-                        <h3 class="text-green-800 font-bold mb-3">2026 戰略行動建議</h3>
+                        <h3 class="text-green-800 font-bold mb-3 flex items-center gap-2">2026 戰略行動建議</h3>
                         <div id="action-text" class="text-sm text-green-900 leading-relaxed space-y-2"></div>
                     </div>
                 </div>
             </section>
+
+            <section class="no-print mt-12">
+                <div class="cta-box p-8 rounded-2xl border border-blue-200 text-center">
+                    <h3 class="text-xl font-bold text-blue-900 mb-3">想要更精準的 AI 落地戰略嗎？</h3>
+                    <p class="text-blue-800 mb-6">如果您希望針對這份報告進行更深度的專業諮詢，請與我們的專家團隊聯繫：</p>
+                    <a href="https://yujing.io/contact/" target="_blank" class="inline-block bg-blue-700 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors shadow-lg">
+                        立即聯繫 宇鯨智能
+                    </a>
+                    <p class="mt-4 text-sm text-blue-500">專注白領核心競爭力重構 · 打造企業 AI 人才金字塔</p>
+                </div>
+            </section>
+
+            <div class="flex flex-col items-center gap-4 pt-10 no-print">
+                <button onclick="window.print()" class="bg-gray-800 text-white px-10 py-4 rounded-full font-bold shadow-xl hover:bg-black transform hover:-translate-y-1 transition-all flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    匯出完整診斷報告 (PDF)
+                </button>
+            </div>
+
+            <footer class="mt-12 pt-8 border-t border-gray-100 text-center">
+                <p class="text-gray-400 text-sm">此報告由 宇鯨智能 5 階金字塔模型授權生成 · © 2026 BELUGA.AI All Rights Reserved.</p>
+                <div class="mt-2 flex justify-center gap-8 text-sm font-bold text-blue-600">
+                    <a href="https://yujing.io" target="_blank">www.yujing.io</a>
+                </div>
+            </footer>
         </div>
     </div>
 
@@ -128,6 +167,7 @@
 
             const scoreData = parseInt(document.getElementById('score-data').value);
             const scoreFlow = parseInt(document.getElementById('score-flow').value);
+            const scoreMind = parseInt(document.getElementById('score-mindset').value);
 
             let risks = [];
             let actions = [];
@@ -138,30 +178,37 @@
             } else {
                 // L2 缺失
                 if (l2 === 0) {
-                    risks.push("【品質風險】缺乏 L2 精準調校師，AI 結果缺乏專業複核機制。");
-                    actions.push("建立 AI 產出驗收標準 (SOP)。");
+                    risks.push("【品質失控風險】缺失 L2 精準調校師，AI 產出恐因無人專業複核而產生決策錯誤。");
+                    actions.push("優先培訓領域專家擔任 L2，建立內容驗收標準。");
                 }
                 
-                // L3 缺失 (新增)
+                // L3 缺失
                 if (l3 === 0) {
-                    risks.push("【知識斷層】缺乏 L3 知識規劃師，AI 將無法讀取公司內部核心經驗，產出內容流於表面。");
-                    actions.push("指派專家進行「隱性知識顯性化」工作，建立結構化知識庫。");
+                    risks.push("【知識斷層風險】缺失 L3 知識規劃師，AI 將缺乏企業隱性經驗，僅能提供一般性回答。");
+                    actions.push("啟動知識資產化工程，建立結構化知識庫 (RAG)。");
                 }
 
-                // L4 缺失
+                // L4 缺失與比例判斷
                 if (l4 === 0) {
-                    risks.push("【協作瓶頸】缺乏 L4 工作流設計師，無法拆解複雜任務，AI 僅能處理零星瑣事。");
-                    actions.push("培訓關鍵人才掌握「人機協作點分析」。");
+                    risks.push("【協作瓶頸風險】缺失 L4 工作流設計師，無法有效拆解任務，AI 將卡在初階行政輔助。");
+                    actions.push("指派流程負責人學習任務拆解方法論，優化人機協作點。");
+                } else if (l4 / total < 0.1) {
+                    risks.push("【轉型動能不足】L4 工作流設計師比例過低 (<10%)，流程改造速度恐落後於競爭對手。");
                 }
 
-                // 成熟度低
-                if (scoreData < 3 && l3 > 0) {
-                    risks.push("【工具閒置】已有 L3 人才但數據成熟度低，代表人才正在進行無效的資料清理。");
+                // L1 佔比過高
+                if (l1 / total > 0.7) {
+                    risks.push("【效率陷阱】團隊高度集中於 L1，AI 被視為替代工具而非生產力槓桿，ROI 低落。");
                 }
 
-                // 默認補全 (修正需求 3)
-                if (risks.length === 0) risks.push("【診斷良好】團隊配置平衡，具備完整的技術落地的層次感。");
-                if (actions.length === 0) actions.push("【維穩建議】持續深化 L3-L5 的協作關係，優化自動化效率。");
+                // 成熟度指標聯動
+                if (scoreData < 3) risks.push("【數據瓶頸】數據資產化程度不足，會嚴重限制 L3 規劃師的產出效能。");
+                if (scoreFlow < 3) risks.push("【自動化斷點】跨部門流程依賴大量人工，L5 的技術優勢尚未形成規模效益。");
+                if (scoreMind < 3) actions.push("建議舉辦 AI-First 工作坊，破除「想像力斷層」，建立員工協作反射。");
+
+                // 健康狀態描述
+                if (risks.length === 0) risks.push("【診斷良好】組織具備平衡的 5 階人才結構，AI 轉型體質健康。");
+                if (actions.length === 0) actions.push("【深化建議】持續優化 AI 自動化 SOP，並建立跨部門的成功案例分享機制。");
             }
 
             document.getElementById('risk-text').innerHTML = risks.map(r => `<p>• ${r}</p>`).join('');
