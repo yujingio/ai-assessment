@@ -23,6 +23,9 @@
         .pyramid-bg { background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%); }
         .input-focus:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body class="py-8 px-4">
 
@@ -82,6 +85,12 @@
                         <p class="text-[10px] text-gray-500 mt-2">基礎對話、摘要、翻譯、行政輔助</p>
                     </div>
                 </div>
+	<div class="mt-8 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+	    <h3 class="text-center font-bold text-gray-700 mb-4">人才戰力雷達分佈圖</h3>
+	    <div class="relative h-64 w-full md:w-3/4 mx-auto">
+	        <canvas id="talentRadarChart"></canvas>
+	    </div>
+	</div>
             </section>
 
             <section>
@@ -95,7 +104,7 @@
                             <h3 class="font-bold text-gray-700">數據資產化程度 (L3 關聯)</h3>
                             <p class="text-sm text-gray-500">公司文件與經驗是否已結構化，隨時可供 AI 讀取？</p>
                         </div>
-                        <select id="score-data" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-32">
+                        <select id="score-data" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-80">
                             <option value="1">1 (全紙本)</option>
                             <option value="2">2（有些紙本有些數位）</option>
                             <option value="3">3（每人不同的數位檔案）</option>
@@ -108,7 +117,7 @@
                             <h3 class="font-bold text-gray-700">流程自動化程度 (L4/L5 關聯)</h3>
                             <p class="text-sm text-gray-500">部門協作中，是否有 RPA、AI 代理人執行端到端重複工作？</p>
                         </div>
-                        <select id="score-flow" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-32">
+                        <select id="score-flow" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-80">
                             <option value="1">1 (全人工)</option>
                             <option value="2">2（人工數位流程，無專用系統）</option>
                             <option value="3">3（專用系統的數位流程）</option>
@@ -121,7 +130,7 @@
                             <h3 class="font-bold text-gray-700">AI-First 意識底座</h3>
                             <p class="text-sm text-gray-500">員工面對新任務時，是否反射性思考 AI 協作的可能性？</p>
                         </div>
-                        <select id="score-mindset" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-32">
+                        <select id="score-mindset" onchange="calculateResults()" class="p-2 bg-white border border-gray-300 rounded-lg font-bold text-blue-600 w-80">
                             <option value="1">1 (完全沒想過使用 AI)</option>
                             <option value="2">2（少數情況想到使用 AI）</option>
                             <option value="3">3（會想到新的想使用 AI 的情景）</option>
@@ -186,6 +195,67 @@
     </div>
 
     <script>
+
+// --- 新增開始：雷達圖邏輯 ---
+let radarChartInstance = null;
+
+function updateChart(l5, l4, l3, l2, l1) {
+    const ctx = document.getElementById('talentRadarChart');
+    if (!ctx) return;
+
+    const dataValues = [l5, l4, l3, l2, l1];
+    
+    // 如果圖表已存在，則更新數據；否則初始化新圖表
+    if (radarChartInstance) {
+        radarChartInstance.data.datasets[0].data = dataValues;
+        radarChartInstance.update();
+    } else {
+        radarChartInstance = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['L5 流程實踐師', 'L4 工作流設計師', 'L3 知識規劃師', 'L2 精準調校師', 'L1 效率使用者'],
+                datasets: [{
+                    label: '目前人數',
+                    data: dataValues,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)', // 藍色半透明填充
+                    borderColor: 'rgba(59, 130, 246, 1)',     // 藍色邊框
+                    pointBackgroundColor: '#1e40af',           // 深藍色節點
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#1e40af',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { size: 12, family: "'Noto Sans TC', sans-serif", weight: 'bold' },
+                            color: '#475569'
+                        },
+                        ticks: {
+                            display: false, // 隱藏數值刻度，保持畫面簡潔
+                            beginAtZero: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 5 // 給予預設最大值，避免圖形在數值小時縮太小
+                    }
+                },
+                plugins: {
+                    legend: { display: false } // 隱藏圖例
+                }
+            }
+        });
+    }
+}
+// --- 新增結束 ---
+
+
+
         function calculateResults() {
             // 1. 取得數值
             const l5 = parseInt(document.getElementById('count-l5').value) || 0;
@@ -198,6 +268,7 @@
             const scoreData = parseInt(document.getElementById('score-data').value);
             const scoreFlow = parseInt(document.getElementById('score-flow').value);
             const scoreMind = parseInt(document.getElementById('score-mindset').value);
+		updateChart(l5, l4, l3, l2, l1);
 
             let riskList = [];
             let actionList = [];
